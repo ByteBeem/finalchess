@@ -1,8 +1,4 @@
-# [SocketChess](https://chess.fratorgano.me/)
-Small Node.js and Socket.io project that allows you play chess with your friends online. <br/>
-This project was devolped on Node.js 16.10 but is currently deployed on 14.17.6. <br/>
-Feel free to contribute! <br/>
-You can play with it here: [chess.fratorgano.me](https://chess.fratorgano.me/)
+
 
 ## Current features
 * Drag and drop to move pieces
@@ -16,15 +12,6 @@ You can play with it here: [chess.fratorgano.me](https://chess.fratorgano.me/)
 * Play against the computer with various algorithms
 * Spectate games
 
-## Try it
-If you want to try it on your local machine, you just need to run some simple commands
-1. Either download the repo or clone it (git clone https://github.com/fratorgano/SocketChess/)
-1. Go to the folder you cloned it to
-1. Run the following commands
-    1. ```npm install``` (Which install all the modules needed but wasm-chess-algorithms)
-    1. ```git clone https://github.com/fratorgano/wasm-chess-algorithms``` in a separate folder
-    1. ```wasm-pack build --target nodejs --out-dir <path-to-node-modules-folder>/wasm-chess-algorithms``` in the wasm-chess-algorithms folder to compile the rust code to wasm
-    1. ```npm start``` (Starts the server on localhost:3001)
 
 ## Dependencies/Modules Used
 ### Server-side
