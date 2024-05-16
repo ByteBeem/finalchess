@@ -1,48 +1,60 @@
-/* global io */
-/* eslint-disable no-unused-vars */
 
-// getting elements from html
 const roomNameInput = document.getElementById('roomName');
-// const createRoomButton = document.getElementById('createRoomButton');
 
-// opening socket
 const socket = io();
 
-// if the user doesn't have a name and a room name, can't create a room
-function createRoom(type) {
+async function createRoom(type) {
   console.log(type);
   if (
-    document.getElementById('userName').checkValidity()
-    && document.getElementById('roomName').checkValidity()
+    document.getElementById('userName').checkValidity() &&
+    document.getElementById('roomName').checkValidity()
   ) {
     switch (type) {
       case 'single':
-        if (document.getElementById('Depth').checkValidity() && document.getElementById('Time').checkValidity()) {
+        if (
+          document.getElementById('Depth').checkValidity() &&
+          document.getElementById('Time').checkValidity()
+        ) {
           console.log('creating room: ', roomNameInput.value);
-          // notify the server about new room
+          // Notify the server about new room
           const algorithm = document.getElementById('Algorithm').value;
           const depth = Number(document.getElementById('Depth').value);
           const time = Number(document.getElementById('Time').value);
-          socket.emit('create_room', type, roomNameInput.value, algorithm, depth, time);
+          try {
+            const response = await fetch(`/create_room?type=${type}&name=${roomNameInput.value}&algorithmName=${algorithm}&depth=${depth}&time=${time}`);
+            if (!response.ok) {
+              throw new Error('Failed to create room');
+            }
+            console.log('Room created successfully');
+          } catch (error) {
+            console.error('Error creating room:', error);
+          }
         }
         break;
       case 'multi':
-        socket.emit('create_room', type, roomNameInput.value);
+        try {
+          const response = await fetch(`http://localhost:3001/create_room?type=${type}&name=${roomNameInput.value}`);
+          if (!response.ok) {
+            throw new Error('Failed to create room');
+          }
+          console.log('Room created successfully');
+        } catch (error) {
+          console.error('Error creating room:', error);
+        }
         break;
       default:
-        console.log('error: trying to create room with unknown type');
+        console.log('Error: Trying to create room with unknown type');
         break;
     }
   }
 }
 
+
 // the user needs a name to join a room
 function joinRoom(roomName) {
   console.log('joining room: ', roomName);
   if (document.getElementById('userName').checkValidity()) {
-    // console.log("moving to chess-page.html with roomName: ", roomName);
-
-    // setting room name to pass it with form to chess-page.html
+    
     roomNameInput.value = roomName;
     // submit form
     document.getElementById('formMulti').submit();

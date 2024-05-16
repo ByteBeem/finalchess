@@ -40,16 +40,60 @@ app.get('/chess', (req, res) => {
   }
 });
 
+app.get('/create_room', (req, res) => {
+  const { type, name, algorithmName, depth, time } = req.query;
+
+  // Check if rooms contains a room with the given name
+  if (rooms.find((room) => room.name === name)) {
+      // If room already exists, don't create a new room
+      console.log('Room already exists:', name);
+      return res.status(400).send('Room already exists');
+  }
+
+  console.log('Creating room:', name);
+  
+  // Create a new room and add it to the rooms array
+  const newRoom = {
+      name,
+      white: {},
+      black: {},
+      spectators: [],
+      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      restart: '',
+      switch: '',
+  };
+  rooms.push(newRoom);
+  
+  // If the room type is 'single', create a new agent
+  if (type === 'single') {
+      const options = {
+          algorithm: algorithmName,
+          seed: rng.int32(),
+          evaluatorString: '',
+          depth,
+          time,
+      };
+      const agent = new Agent(options);
+      
+      // Add the agent to the room after a delay
+      setTimeout(() => {
+          agent.joinRoom(name);
+      }, 1000);
+  }
+
+  res.status(200).send('Room created successfully');
+});
+
 // handle user connection to server through socket
 io.on('connection', (socket) => {
-  // console.log("user connected");
+  
   socket.emit('room_list', rooms);
 
-  // preparing variables to store roomName and userName
+
   let roomNameSocket = '';
   let userNameSocket = '';
 
-  // handling create_room event
+  
   socket.on('create_room', (type, name, algorithmName, depth, time) => {
     // check if rooms contains a room with name name
     if (rooms.find((room) => room.name === name)) {

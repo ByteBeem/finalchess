@@ -1,15 +1,11 @@
-/* global $, io, Chess, Chessboard  */
 
-// getting values from get request
 const params = new URLSearchParams(window.location.search);
 const roomName = params.get('roomName');
 const userName = params.get('userName');
 
-// preparing variables
+
 let board = null;
 const game = new Chess();
-// const whiteSquareGrey = '#a9a9a9';
-// const blackSquareGrey = '#696969';
 const whiteSquareGrey = '#c4f296';
 const blackSquareGrey = '#4bd84b';
 const socket = io();
@@ -137,8 +133,7 @@ socket.on('room_status', (room) => {
     restartButton.classList.add('background-colored');
   }
 
-  // creating logic for restart button
-  restartButton.textContent = 'Restart game';
+
   restartButton.onclick = () => {
     if (!room.restart) {
       console.log('requesting restart');
@@ -149,8 +144,7 @@ socket.on('room_status', (room) => {
     }
   };
 
-  // creating logic for switchSides button
-  switchSidesButton.textContent = 'Switch sides';
+  
   if (room.switch === '') {
     switchSidesButton.classList.remove('background-colored');
   } else {
